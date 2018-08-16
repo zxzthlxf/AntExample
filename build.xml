@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+<project name="AntExample" default="firstTarget" basedir=".">
+	<property name="firstText" value="first"></property>
+	<property name="secondText" value="second"></property>
+	<target name="firstTarget">
+		<echo>${firstText}</echo>
+	</target>
+	<target name="secondTarget">
+		<echo>${secondText}</echo>
+	</target>
+</project>-->
+<project name="AntExample">
+	<property name="src.dir" value="src" />
+	<property file="example.properties" />
+	<target name="compile" description="compile the HelloWorld.java file">
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" includeAntRuntime="false"></javac>
+	</target>
+	
+	<target name="run" description="run the HelloWorld.class" depends="compile">
+		<java classname="HelloWorld">
+			<classpath>
+				<pathelement path="${classes.dir}" />
+			</classpath>
+		</java>
+	</target>
+	
+	<target name="pack" depends="run" description="make .jar file">
+		<jar destfile="${dist.dir}/hello.jar" basedir="${classes.dir}"></jar>
+	</target>
+	
+	<target name="doc" depends="pack" description="create api doc">
+		<javadoc destdir="${doc.dir}" author="true" version="true" use="true" windowtitle="HelloWorld API">
+			<fileset dir="${src.dir}" defaultexcludes="yes"></fileset>
+			<doctitle>
+				<![CDATA[<h1>Hello,test</h1>]]>
+			</doctitle>
+			<bottom>
+				<![CDATA[<i>All Rights Reserved.</i>]]>
+			</bottom>
+		</javadoc>
+	</target>
+	
+	<target name="mail" description="mail somthing">
+		<mail mailhost="smtp.163.com" user="zxzthlxf" password="Z@xz820326" subject="Test build" charset="utf-8">
+			<from address="zxzthlxf@163.com" />
+			<to address="zxzthlxf@163.com" />
+			<message>The nightly build has completed</message>
+			<fileset dir="${src.dir}">
+				<include name="**/*.java" />
+			</fileset>
+		</mail>
+	</target>
+</project>
